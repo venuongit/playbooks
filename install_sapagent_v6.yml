@@ -1,0 +1,26 @@
+
+- name: Install Sap Agent on the servers.   
+  hosts: AWS
+  user: vkedhari 
+  become_method: sudo        
+  become_user: root
+  become: true
+  gather_facts: true 
+
+  environment:
+    PATH: '/usr/sbin:/sbin:/usr/bin:/bin'
+
+    vars: 
+      SARFILES: '/Media/Software_Master/SAP/Installation/SAPHostAgent'
+      HostAgent_Operations: '/Media/LaMa/Linux/HostAgent_Operations'
+      UNPACKSCRIPT: 'unpack.bash'
+      SAPCAR: '/Media/Utilities/Linux'
+      ENVIRONMENT: "$1"
+   
+
+  tasks:
+     - name:  Install SAP Agent
+       command: /Media/Software_Master/SAP/Installation/SAPHostAgent/InstallHostAgent.bash NQ
+
+...
+

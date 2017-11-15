@@ -1,0 +1,80 @@
+
+- name: Install Sap Agent on the servers.   
+  hosts: QA
+  user: vkedhari 
+  become_method: sudo        
+  become_user: root
+  become: true
+  gather_facts: true 
+
+  environment:
+    PATH: '/usr/sbin:/sbin:/usr/bin:/bin'
+
+    vars: 
+      SARFILES: '/Media/Software_Master/SAP/Installation/SAPHostAgent'
+      HostAgent_Operations: '/Media/LaMa/Linux/HostAgent_Operations'
+      UNPACKSCRIPT: 'unpack.bash'
+      SAPCAR: '/Media/Utilities/Linux'
+      ENVIRONMENT: "$1"
+   
+
+  tasks:
+     - name:  unarchieve to /opt 
+       command: /Media/Utilities/Linux/sapcar -R /opt/SAPHOSTAGENT -xvf /Media/Software_Master/SAP/Installation/SAPHostAgent/SAPHOSTAGENT*
+  
+     - name:  installs the host agent 
+       command: /opt/SAPHOSTAGENT/saphostexec -install
+       args:
+         chdir: /opt/SAPHOSTAGENT/
+
+     - name: Clean tar file from opt 
+       file: path=/opt/SAPHOSTAGENT state=absent
+
+     - name: command stops the host agent
+       command: /usr/sap/hostctrl/exe/saphostexec -stop
+       args:
+         chdir: /usr/sap/hostctrl/exe/
+    #- name: command checks the host agent status
+      #shell: /usr/sap/hostctrl/exe/saphostexec -status
+       #rgs:
+        #chdir: /usr/sap/hostctrl/exe/
+ 
+     - name: Unpacking LaMa package LaMa package
+       command: /Media/Utilities/Linux/sapcar -R /usr/sap/hostctrl/exe -xvf /Media/Software_Master/SAP/Installation/SAPHostAgent/SAPACEXT*.SAR
+         
+     - name: Changing ownership for sapacext
+       command: chown root:sapsys /usr/sap/hostctrl/exe/sapacext
+       #file: path=/usr/sap/hostctrl/exe/sapacext owner=root group=sapsys 
+         #path: /usr/sap/hostctrl/exe/sapacext
+          #owner: root
+          #group: sapsys
+     - name: Unpacking Amgen specific zip
+       command: /Media/LaMa/Linux/HostAgent_Operations/unpack.bash
+     - name: Copying host_profile for environment COMMENT HOST PROFILE APPROPRIATELY FOR NQ=DEV,PROD,SDBX
+       copy:
+         remote_src: true
+         #src: /Media/LaMa/Linux/HostAgent_Operations/host_profile_NQ 
+         #src: /Media/LaMa/Linux/HostAgent_Operations/host_profile_PRD
+         src: /Media/LaMa/Linux/HostAgent_Operations/host_profile_QA
+         #src: /Media/LaMa/Linux/HostAgent_Operations/host_profile_SBX
+         dest: /usr/sap/hostctrl/exe/
+     # Setting ownership to sapadm:sapsys for host_profile
+     - file: 
+         path: /usr/sap/hostctrl/exe/host_profile
+         owner: sapadm
+         group: sapsys
+         mode: 0644
+     - name: Start SAP Host Agent.
+       command: /usr/sap/hostctrl/exe/saphostexec -restart
+       args:
+         chdir: /usr/sap/hostctrl/exe/
+     - name: 
+       command: /usr/sap/hostctrl/exe/saphostexec -status
+       args:
+         chdir: /usr/sap/hostctrl/exe/
+
+
+
+
+...
+

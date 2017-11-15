@@ -1,0 +1,51 @@
+---
+- name: sios install 
+  hosts: "{{ override_hosts | default('SIOS') }}"
+  user: vkedhari
+  become_method: sudo
+  become_user: root
+  become: true
+  gather_facts: true 
+
+  environment:
+    PATH: '/usr/sbin:/sbin:/usr/bin:/bin'
+
+  vars:
+    sios_req_rpms:
+      - libXtst
+      - libstdc++
+      - bzip2-libs
+      - pam
+      - zlib
+      - patch
+      - redhat-lsb
+ 
+  tasks:
+     
+  - name:  Install SIOS rpms
+    yum: name={{item}} state=present
+    with_items: '{{ sios_req_rpms }}'
+    become: true
+
+  - name:  copy IMAGE file to tmp 
+    copy:
+      remote_src: true
+      src: /home/vkedhari/sps.img
+      dest: /tmp/
+  
+  - name: mount the IMAGE file
+    mount:
+      name: /mnt
+      src: /tmp/sps.img
+      fstype: iso9660
+      opts: loop
+      state: mounted
+   
+  #- name: Run Setup Command 
+     # expect:
+        #command: /mnt/setup
+        # responses:
+         #  Question:
+          #   - y
+           #  - y
+...

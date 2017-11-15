@@ -1,0 +1,15 @@
+---
+- name: Copy and Restart Licence.    
+  hosts: "{{ override_hosts | default('ERP') }}" 
+  user: vkedhari 
+  become_method: sudo
+  become_user: root
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Copy the license to temporary directory 
+      script: /home/vkedhari/ansible/ERP/playbooks/copy_licence.sh 
+    - name: move and restart the licence 
+      script: /home/vkedhari/ansible/ERP/playbooks/copy_restart.sh
+      
+...   

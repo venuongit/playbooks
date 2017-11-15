@@ -1,0 +1,28 @@
+---
+- name: Update Permissions.    
+  hosts: "{{ override_hosts | default('ERP') }}" 
+  user: aniteshl
+  become_method: sudo
+  become_user: root
+  become: true
+  gather_facts: true
+
+  vars: 
+    required_directories:
+      - {path: '/usr/sap', user: 'root', group: 'sapsys' }
+      - {path: '/usr/sap/GP1', user: 'gp1adm', group: 'sapsys' }
+      - {path: '/usr/home/gp1adm', user: 'gp1adm', group: 'sapsys' }
+      - {path: '/usr/sap/PP1', user: 'pp1adm', group: 'sapsys' }
+      - {path: '/usr/home/pp1adm', user: 'pp1adm', group: 'sapsys' }
+
+  tasks:
+    - name: Update Permissions. 
+      file:  
+        path: '{{ item.path }}' 
+        state: directory
+        owner: '{{ item.user }}' 
+        group: '{{ item.group }}' 
+        mode: 0755
+      with_items: '{{ required_directories }}'
+
+...

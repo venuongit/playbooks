@@ -1,0 +1,2 @@
+rmenon01 ALL=(root) /opt/LifeKeeper/bin/lkGUIapp, /bin/systemctl stop nfs-server, \
+                    /bin/systemctl start nfs-server, /bin/umount /export/sapmnt/* 

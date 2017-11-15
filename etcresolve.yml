@@ -1,0 +1,20 @@
+- name: Updateresoveconf file
+  hosts:  "{{ override_hosts | default('ERP') }}" 
+  user: vkedhari 
+  become_method: sudo        
+  become_user: root
+  become: true
+  gather_facts: true 
+
+  environment:
+    PATH: '/usr/sbin:/sbin:/usr/bin:/bin'
+
+  tasks:
+     - name:  resolvefilebkp
+       command: cp /etc/resolv.conf /etc/resolvbkp82417 
+     - name:  resolveorig 
+       command: sudo cp -p /share/scratch/vkedhari/resolv.conf /etc/resolv.conf
+     
+
+...
+

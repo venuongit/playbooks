@@ -1,0 +1,12 @@
+---
+- name: Update /etc/services.    
+  hosts: "{{ override_hosts | default('ERP') }}" 
+  user: aniteshl
+  become_method: sudo
+  become_user: root
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Update /etc/services. 
+      script: /home/aniteshl/bin/ERP/services.sh 
+...

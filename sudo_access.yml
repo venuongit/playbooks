@@ -1,0 +1,21 @@
+---
+- name: Setup GERP SIOS Admins Elevated Privileges
+  hosts: "{{ override_hosts | default('ERP') }}"
+  become_method: sudo
+  become_user: root
+  become: false
+
+  vars:
+    basedir: '/home/vkedhari/ansible/ERP/playbooks'
+    templates: '{{basedir}}/templates'
+
+  tasks:
+  - name: Setup GERP SIOS Admins Elevated Privileges. 
+    template:
+      src: '{{templates}}/sudoers.d/gerp-sios-admins.j2'
+      dest: /etc/sudoers.d/80_gerp-sios-admins
+      owner: root
+      group: root
+      mode: 0440
+    become: true
+...

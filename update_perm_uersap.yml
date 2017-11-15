@@ -1,0 +1,16 @@
+---
+- name: Update permission for user sap directory
+  hosts: "{{ override_hosts | default('ERP') }}" 
+  user: vkedhari
+  become_method: sudo
+  become_user: root
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Update /usr/sap to 755 and ownergroup to root and sap
+      file: 
+        path: /usr/sap
+        owner: root
+        group: sapsys
+        mode: 0755
+...

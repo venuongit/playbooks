@@ -1,0 +1,13 @@
+---
+- name: SIOSLICcheck.    
+  hosts: "{{ override_hosts | default('SIOSLIC') }}" 
+  user: vkedhari
+  become_method: sudo
+  become_user: root
+  become: true
+  gather_facts: true
+  tasks:
+    - name: SIOS LIC check 
+      command: hostname>>/home/vkedhari/ansible/ERP/liclist.txt 
+      command: sudo /opt/LifeKeeper/bin/lklicmgr >> /home/vkedhari/ansible/ERP/liclist.txt
+...

@@ -1,0 +1,23 @@
+---
+- name: Copy and Restart Licence.    
+  hosts: "{{ override_hosts | default('SIOS') }}" 
+  user: vkedhari 
+  become_method: sudo
+  become_user: root
+  become: true
+  gather_facts: true
+  tasks:
+    # - lineinfile: 
+     #    dest=/tmp/device_pattern
+      #   state=present
+       #  regexp='^(.*)"(.*)$'
+        # line='\#\2'
+         #backup=yes
+         #backrefs=yes
+    # - replace:
+     #  dest=/tmp/device_pattern
+      # regexp='^(")\s*$' 
+       #replace='\1#\2'
+      - name: Delete extra char 
+        command: sed -i 's/"/#/g' /opt/LifeKeeper/subsys/scsi/resources/DEVNAME/device_pattern
+...   

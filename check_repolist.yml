@@ -1,0 +1,12 @@
+---
+- name: Checking yum repolist.    
+  hosts: "{{ override_hosts | default('SDBX') }}" 
+  user: vkedhari
+  become_method: sudo
+  become_user: root
+  become: true
+  gather_facts: true
+  tasks:
+    - name: repolist check 
+      command: yum repolist >> /home/vkedhari/ansible/ERP/logs/check_repolist.log 
+...

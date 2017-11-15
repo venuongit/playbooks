@@ -1,0 +1,19 @@
+---
+- name: Update /etc/resolv.conf
+  hosts: "{{ override_hosts | default('ERP') }}" 
+  user: vkedhari 
+  become_method: sudo        
+  become_user: root
+  become: true
+  gather_facts: true 
+
+  environment:
+    PATH: '/usr/sbin:/sbin:/usr/bin:/bin'
+
+  tasks:
+     - name: Backup /etc/resolv.conf 
+       command: cp -rp /etc/resolv.conf /etc/resolv.conf.08-24-17
+
+     - name:  Update /etc/resolv.conf 
+       command: cp -p /share/scratch/ERP/resolv.conf /etc/resolv.conf
+...

@@ -1,0 +1,21 @@
+---
+- name: Update permission usrsapsid directory
+  hosts: "
+erp-qapp-300
+erp-qapp-301
+
+
+" 
+  user: vkedhari
+  become_method: sudo
+  become_user: root
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Update sursapsid dir
+      file: 
+        path: /usr/sap/WQ1
+        owner: wq1adm
+        group: sapsys
+        mode: 0755
+...
